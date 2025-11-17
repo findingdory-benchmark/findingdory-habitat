@@ -1,0 +1,78 @@
+# @package _global_
+defaults:
+  - /habitat: habitat_config_base
+
+  - /simulator@habitat.simulator: findingdory_sim
+  - /habitat/simulator/sensor_setups@habitat.simulator.agents.main_agent: rgbdp_head_rgbd_arm_agent
+  - /agents@habitat.simulator.agents.main_agent: stretch
+
+  - /task@habitat.task: findingdory
+  - /habitat/task/actions:
+    - arm_action
+    - pddl_intermediate_stop
+  - /habitat/task/measurements:
+    - zero
+  - /habitat/task/lab_sensors:
+    - joint_sensor
+
+  - /dataset@habitat.dataset: findingdory_hssd
+  - _self_
+
+# Config for empty task to explore the scene.
+habitat:
+  # dataset:
+  #   episode_ids: [2]    # 2,4,5,6,9
+  task:
+    actions:
+      arm_action:
+        type: "ArmAction"
+        arm_controller: "ArmRelPosReducedActionStretch"
+        grip_controller: "PointGraspAction"
+        arm_joint_mask: [1,1,1,1,1,1,1,1,1,1]
+        arm_joint_dimensionality: 10
+        grasp_thresh_dist: 0.15
+        disable_grip: False
+        max_delta_pos: 0.1
+        min_delta_pos: 0.02
+        ee_ctrl_lim: 0.015
+        gaze_distance_range: [0.1, 1.5]
+        center_cone_angle_threshold: 20.0
+        center_cone_vector: [0.0, 1.0, 0.0]
+        # move_joints_only_in_manip_mode: False
+
+    count_obj_collisions: True
+    desired_resting_position: [0.5, 0.0, 1.0]
+    reward_measure: "zero"
+    success_measure: "predicate_task_success"
+
+    # Reach task config
+    render_target: True
+    ee_sample_factor: 0.8
+
+    # In radians
+    base_angle_noise: 0.0
+    base_noise: 0.0
+    constraint_violation_ends_episode: False
+
+    force_regenerate: True
+  environment:
+    max_episode_steps: 0
+
+  simulator:
+    type: FindingDorySim-v0
+    additional_object_paths:
+      - data/objects/train_val/amazon_berkeley/configs/
+      - data/objects/train_val/google_scanned/configs/
+      - data/objects/train_val/ai2thorhab/configs/objects/
+      - data/objects/train_val/hssd/configs/objects/
+    needs_markers: False
+    debug_render_goal: False
+    debug_render: False
+    concur_render: True
+    auto_sleep: False
+    requires_textures: False
+    kinematic_mode: True
+
+    habitat_sim_v0:
+      enable_physics: True
+      enable_hbao: True

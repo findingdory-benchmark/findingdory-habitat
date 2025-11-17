@@ -1,0 +1,28 @@
+# @package _global_
+
+defaults:
+  - /benchmark: findingdory_multitask
+  - /habitat/simulator/sim_sensors@habitat_baselines.eval.extra_sim_sensors.third_rgb_sensor: third_rgb_sensor
+  - _self_
+
+
+habitat_baselines:
+  video_dir: "data/outputs/qwen_mapper/video"
+
+  agent:
+    _target_: findingdory.policies.heuristic.vlm_mapper.VLMMapperAgent
+    config:
+      model: "Qwen/Qwen2.5-VL-7B-Instruct"
+      prompt_file: "findingdory/policies/llm/prompts/qwen_prompt.txt"
+      chunk_size: 96
+      subsample_frames: True
+      vlm_temp_folder: "debug/qwen_mapper/interaction_videos"
+      output_folder: "debug/qwen_mapper/vlm_frames"
+      pointnav_max_steps: 1000
+      delay_between_tasks: 0
+
+  additional_success_metrics:
+    vlm_subgoal_metrics:
+      - high_level_goal_success
+      - high_level_dtg_success
+      - high_level_sem_cov_success

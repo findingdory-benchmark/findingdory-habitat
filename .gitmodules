@@ -1,0 +1,4 @@
+[submodule "third_party/habitat-lab"]
+	path = third_party/habitat-lab
+	url = git@github.com:ykarmesh/habitat-lab.git
+	branch = karmeshyadav/memory_dataset

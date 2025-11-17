@@ -1,0 +1,36 @@
+# @package habitat.task
+
+defaults:
+  - /habitat/task: image_nav_task_config_base
+  - /habitat/task/actions:
+    - stop
+    - move_forward
+    - turn_left
+    - turn_right
+  - /habitat/task/measurements:
+    - distance_to_goal
+    - angle_to_goal
+    - success
+    - train_success
+    - angle_success
+    - spl
+    - simple_reward
+    - num_steps
+    - does_want_terminate
+    - bad_called_terminate
+    - articulated_agent_force
+    - articulated_agent_colls
+    - force_terminate
+  - /habitat/task/lab_sensors:
+    - imagegoal_rotation_sensor
+  - _self_
+
+type: ImageNavTask-v0
+reward_measure: "simple_reward"
+success_measure: "success"
+end_on_success: True
+measurements:
+  distance_to_goal:
+    goals_attr: nav_goal_pos
+  success:
+    success_distance: 1.0

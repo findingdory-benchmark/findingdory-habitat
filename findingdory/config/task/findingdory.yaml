@@ -1,0 +1,109 @@
+# @package habitat.task
+
+defaults:
+  - /habitat/task: findingdory_task_config_base
+  - /habitat/task/actions:
+    - stop
+    - move_forward
+    - turn_left
+    - turn_right
+    - arm_action
+    - manipulation_mode
+    - navigation_mode
+    - base_velocity
+    - pddl_intermediate_stop
+  - /habitat/task/measurements:
+    # forces and collisions
+    - articulated_agent_force
+    - articulated_agent_colls
+    - navmesh_collision
+    # terminations
+    - force_terminate
+    - does_want_terminate
+    - robot_collisions_terminate
+    # successes
+    - predicate_task_success
+    # this measure needs to be after successs
+    - bad_called_terminate
+    # others
+    - target_iou_coverage
+    - num_steps
+    - picked_obj_anywhere_on_goal
+    - high_level_goal_success
+    - vlm_failure_modes
+    - high_level_dtg_success
+    - high_level_sem_cov_success
+    - subgoal_count
+    - low_level_policy_failure_modes
+    - findingdory_spl
+    # - oracle_solution_generator     # TODO: We need to uncomment this when generating oracle solutions 
+    - findingdory_high_level_spl
+  - /habitat/task/lab_sensors:
+    - joint_sensor
+    - joint_velocity_sensor
+    - robot_start_gps_sensor
+    - robot_start_compass_sensor
+    - camera_pose_sensor
+    - receptacle_segmentation_sensor
+    - all_object_segmentation_sensor
+    - other_object_segmentation_sensor
+    - lang_memory_goal_sensor
+    - time_of_day_sensor
+    - last_action_sensor
+    - can_take_action_sensor
+    - manipulation_mode
+    - agent_state
+    - oracle_keyframes
+    - compass_sensor
+    - gps_sensor
+  - _self_
+
+type: FindingDoryTask-v0
+reward_measure: "zero"
+success_measure: "predicate_task_success"
+success_reward: 10.0
+slack_reward: -0.005
+end_on_success: True
+constraint_violation_ends_episode: False
+constraint_violation_drops_object: True
+object_in_hand_sample_prob: 0.0
+min_start_distance: 1.5
+# PDDL task settings.
+pddl_domain_def_path: "task/pddl_domain_fp.yaml"
+num_steps_daily: 4000
+selected_instruction: -1
+
+camera_tilt: -0.5236
+receptacle_categories_file: data/objects/hssd-receptacles.csv
+object_categories_file: data/objects/object_categories.csv
+other_object_categories_file: data/objects/fpModels-v0.2.3.csv
+measurements:
+  force_terminate:
+    max_accum_force: 500_000.0  # Reduce to 10k later
+    max_instant_force: 500_000.0  # Reduce to 10k later
+lab_sensors:
+  joint_sensor:
+    dimensionality: 10
+  joint_velocity_sensor:
+    dimensionality: 10
+  receptacle_segmentation_sensor:
+    blank_out_prob: 0.0
+   
+actions:
+  arm_action:
+    arm_controller: "ArmRelPosKinematicAction"
+    arm_joint_mask: [1,1,1,1,1,1,1,1,1,1]
+    arm_joint_dimensionality: 10
+    grip_controller: "PointGraspAction"
+    gaze_distance_range: [0.1, 2.0]
+    translation_up_offset: 0.1
+    auto_grasp: False
+    max_delta_pos: 0.1
+    min_delta_pos: 0.02
+  base_velocity:
+    type: "BaseWaypointTeleportAction"
+    navmesh_offset: [[0.0, 0.0]]
+    max_displacement_along_axis: 1.0    # NOTE: Make sure this is set to 1.0 so that the actual forward_step doesnt get scaled in the BaseWaypointTeleportAction step() code
+    max_turn_degrees: 180.0             # NOTE: This is not actually used anywhere in the BaseWaypointTeleportAction code as we dont use normalized angle values
+    allow_lateral_movement: True
+    allow_simultaneous_turn: True

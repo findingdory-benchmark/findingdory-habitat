@@ -1,0 +1,43 @@
+# @package _global_
+
+defaults:
+  - /habitat: habitat_config_base
+
+  - /simulator@habitat.simulator: findingdory_sim
+  - /habitat/simulator/sensor_setups@habitat.simulator.agents.main_agent: rgbdp_head_rgb_third_agent
+  - /habitat/simulator/agents@habitat.simulator.agents.main_agent: stretch
+
+  - /task@habitat.task: findingdory
+  - /dataset@habitat.dataset: findingdory_hssd
+
+  - _self_
+
+habitat:
+  gym:
+    obs_keys:
+      - head_depth
+      - findingdory_nav_goal_segmentation
+      - receptacle_segmentation
+      - all_object_segmentation
+      - other_object_segmentation
+      - robot_start_gps
+      - robot_start_compass
+  
+  environment:
+    max_episode_steps: 100000
+
+  task:
+    type: FindingDoryMultiTask-v0
+    instructions_to_evaluate: [-1] # all tasks will be evaluated. Set to [task_1, task_2, ...] to evaluate specific tasks.
+  
+  simulator:
+    agents:
+      main_agent:
+        sim_sensors:
+          third_rgb_sensor:
+            height: 640
+            width: 480
+    habitat_sim_v0:
+      enable_hbao: True
+    forward_step_size: 0.25
+    turn_angle: 10

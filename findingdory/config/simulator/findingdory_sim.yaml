@@ -1,0 +1,16 @@
+type: FindingDorySim-v0
+additional_object_paths:
+  - data/objects/train_val/amazon_berkeley/configs/
+  - data/objects/train_val/google_scanned/configs/
+  - data/objects/train_val/ai2thorhab/configs/objects/
+  - data/objects/train_val/hssd/configs/objects/
+debug_render_goal: False
+debug_render: False
+concur_render: True
+auto_sleep: True
+requires_textures: False
+kinematic_mode: True
+habitat_sim_v0:
+  allow_sliding: False
+  enable_physics: True
+needs_markers: True

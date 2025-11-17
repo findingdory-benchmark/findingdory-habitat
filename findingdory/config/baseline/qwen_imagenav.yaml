@@ -1,0 +1,36 @@
+# @package _global_
+
+defaults:
+  - /benchmark: findingdory_multitask
+  - /habitat/simulator/sim_sensors@habitat_baselines.eval.extra_sim_sensors.third_rgb_sensor: third_rgb_sensor
+  - _self_
+
+
+habitat_baselines:
+  video_dir: "data/findingdory_outputs/qwen_imagenav/video"
+
+  agent:
+    _target_: findingdory.policies.end_to_end.qwen_imagenav_agent.QwenImageNavAgent
+    config:
+      model: "Qwen/Qwen2.5-VL-7B-Instruct"
+      prompt_file: "findingdory/policies/llm/prompts/qwen_prompt.txt"
+      chunk_size: 96
+      subsample_frames: True
+      vlm_temp_folder: "data/findingdory_outputs/qwen_imagenav/temp"
+      output_folder: "data/findingdory_outputs/qwen_imagenav/logs"
+      imagenav_ckpt_path: data/datasets/findingdory-habitat/findingdory_imagenav/policy_ckpt/imagenav_policy.pth
+      change_vlm_selected_frame: True
+      imagenav_max_steps: 1000
+      delay_between_tasks: 0 # use higher delay for closed-source eval
+
+      # TODO (YA): This eval_dataset_path is passed to the agent class to initialize the env_spec object during imagenav policy loading. Remove this and use the dataset path that is defined in cfg.habitat.dataset
+      eval_dataset_path:
+        data_path: data/datasets/findingdory-habitat/findingdory/val/episodes.json.gz
+        viewpoints_matrix_path: data/datasets/findingdory-habitat/findingdory/val/viewpoints.npy
+        transformations_matrix_path: data/datasets/findingdory-habitat/findingdory/val/transformations.npy
+
+  additional_success_metrics:
+    vlm_subgoal_metrics:
+      - high_level_goal_success
+      - high_level_dtg_success
+      - high_level_sem_cov_success

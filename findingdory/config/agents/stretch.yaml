@@ -1,0 +1,28 @@
+# @package habitat.simulator.agents.stretch
+defaults:
+  - /habitat/simulator/agents@: agent_base
+  - _self_
+
+radius: 0.25
+height: 1.41
+max_climb: 0.01
+max_slope: 5.0    # We set this to 5.0 becuase that is what is used during episode generation as well
+articulated_agent_type: "StretchRobot"
+articulated_agent_urdf: data/robots/hab_stretch/urdf/hab_stretch.urdf
+ik_arm_urdf: null
+sim_sensors:
+  head_rgb_sensor:
+    height: 640
+    width: 480
+    hfov: 43
+    position: [0,1.31,0]
+  head_depth_sensor:
+    height: 640
+    width: 480
+    hfov: 43
+    position: [0,1.31,0]
+  head_panoptic_sensor:
+    height: 640
+    width: 480
+    hfov: 43
+    position: [0,1.31,0]

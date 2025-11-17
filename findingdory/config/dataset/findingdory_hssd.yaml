@@ -1,0 +1,12 @@
+# @package habitat.dataset
+
+defaults:
+  - /habitat/dataset: findingdory_dataset_config_schema
+  - _self_
+
+type: FindingDoryDataset-v0
+split: val
+data_path: data/datasets/findingdory-habitat/findingdory/val/episodes.json.gz
+scenes_dir: data/hssd-hab/
+viewpoints_matrix_path: data/datasets/findingdory-habitat/findingdory/val/viewpoints.npy
+transformations_matrix_path: data/datasets/findingdory-habitat/findingdory/val/transformations.npy
