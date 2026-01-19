@@ -46,7 +46,9 @@ class FindingDoryMultiTask(FindingDoryTask):
         
         # Evaluate all tasks sequentially if user specifies [-1] as the instructions to evaluate
         if len(self._instructions_to_evaluate) == 1 and self._instructions_to_evaluate[0] == -1:
-            self._instructions_to_evaluate = [x for x in range(len(episode.instructions))]
+            self._instructions_to_evaluate = []
+            for instr in episode.instructions:
+                self._instructions_to_evaluate.append(instr.task_id)
         
         next_instr_id = self._find_next_instruction_idx()
         self._chosen_instr_idx = next_instr_id
@@ -71,6 +73,11 @@ class FindingDoryMultiTask(FindingDoryTask):
                 else:
                     print("Invalid task ID type. Expected a string or int.")
                     return -1  # Return flag instead of crashing
+                
+            # Skip task_30 always since it is not valid task
+            if query_task_id == "task_30":
+                print(f"Skipping '{query_task_id}' since it always has 0 Success Rate !")
+                continue
 
             # Check if query_task_id exists in episode instructions
             for idx, instruction in enumerate(self._sim.ep_info.instructions):
