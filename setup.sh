@@ -7,6 +7,7 @@ mamba install -n $conda_env_name habitat-sim=0.3.1 withbullet headless -c conda-
 
 mamba activate $conda_env_name
 
+git submodule update --init --recursive
 pip install -e third_party/habitat-lab/habitat-lab
 pip install -e third_party/habitat-lab/habitat-baselines
 

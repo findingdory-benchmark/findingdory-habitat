@@ -46,15 +46,17 @@ class FindingDoryMultiTask(FindingDoryTask):
         
         # Evaluate all tasks sequentially if user specifies [-1] as the instructions to evaluate
         if len(self._instructions_to_evaluate) == 1 and self._instructions_to_evaluate[0] == -1:
-            self._instructions_to_evaluate = [x for x in range(len(episode.instructions))]
+            self._instructions_to_evaluate = []
+            for instr in episode.instructions:
+                self._instructions_to_evaluate.append(instr.task_id)
         
-        next_instr_id = self._find_next_instruction_idx()
+        next_instr_id = self._find_next_instruction_idx(episode.episode_id)
         self._chosen_instr_idx = next_instr_id
         self.metrics_per_task = {}
         
         return self._last_observation
     
-    def _find_next_instruction_idx(self):
+    def _find_next_instruction_idx(self, episode_id):
         """
         Cycles through user-specified instruction task_ids in `self._instructions_to_evaluate`
         until a valid instruction is found in `episode.instructions`. Returns the corresponding
@@ -71,6 +73,11 @@ class FindingDoryMultiTask(FindingDoryTask):
                 else:
                     print("Invalid task ID type. Expected a string or int.")
                     return -1  # Return flag instead of crashing
+                
+            # Skip task_30 for episodes where a solution object entity is missing otherwise empty PDDL goal expr crashes evaluation. TODO (YA): Find a better fix
+            if query_task_id == "task_30" and episode_id in ["17", "35", "59", "66"]:
+                print(f"Skipping '{query_task_id}' for episode {episode_id} !")
+                continue
 
             # Check if query_task_id exists in episode instructions
             for idx, instruction in enumerate(self._sim.ep_info.instructions):
