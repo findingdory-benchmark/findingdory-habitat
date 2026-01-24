@@ -207,7 +207,7 @@ class FindingDoryMultiTask(FindingDoryTask):
         # If we encounter a stop action, it implies either the high level goals lead to task failure or the low level policy has invoked a STOP action
         # In either case, we move to the next task instruction (if there is one remaining) to be evaluated and reset the PDDL-related objects for the new evaluation
         if action["action"] == HabitatSimActions.stop or action["action"] == "pddl_intermediate_stop":                
-            next_instr_id = self._find_next_instruction_idx()
+            next_instr_id = self._find_next_instruction_idx(episode.episode_id)
             if next_instr_id != -1:
                 self._switch_evaluation_to_new_task(episode, action, self._last_observation, next_instr_id)
                 action = {
